@@ -63,6 +63,10 @@ To fetch the latest version from master and run it:
 
 `deno run --allow-net --allow-read=/var/gemini --allow-write=/var/gemini/logs https://raw.githubusercontent.com/caranatar/denoscuri/master/denoscuri.ts /var/gemini/config.json`
 
+To fetch a tagged version (such as the current one):
+
+`deno run --allow-net --allow-read=/var/gemini --allow-write=/var/gemini/logs https://raw.githubusercontent.com/caranatar/denoscuri/v0.1.0/denoscuri.ts /var/gemini/config.json`
+
 ## Trivia
 "Denoscuri" is a portmanteau of Deno and Dioscuri - the Greek name for the
 twins Castor and Pollux, who became the constellation Gemini
