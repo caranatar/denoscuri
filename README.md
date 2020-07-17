@@ -1,24 +1,24 @@
-Denoscuri A simple [Gemini] server written using [Deno] and [Typescript].
+# Denoscuri - A simple [Gemini] server written using [Deno] and [Typescript].
 
-# Features:
+## Features:
 * Virtual host support
 * Static file serving
   * Visiting a directory serves index.gmi or index.gemini if it exists
   * Returns a gemtext listing of the directory if no index file exists
 * Request, response, and error logging
 
-# Planned features:
+## Planned features:
 * Redirect/"Gone" support
 * Psuedo-CGI using dynamic import of typescript files
 * Input/query support
 * Breakout into libraries
 
-# Unsupported features (likely won't implement):
+## Unsupported features (likely won't implement):
 * Proxying
 * Rate limiting
 * Client certificates - subject to change, pending Deno support for them
 
-# Configuration
+## Configuration
 Create a configuration with one or more server blocks:
 ```json
 {
@@ -44,23 +44,23 @@ Create a configuration with one or more server blocks:
 ```
 
 `port`, `requireCRLF`, and `logFile` are optional configuration items, which
-will default to `1965`, `true`, and the `./<hostname>.log`, respectively, if
-they are not present. All other options are required.
+will default to `1965`, `true`, and `./<hostname>.log`, respectively, if they
+are not present. All other options are required.
 
-# Running
+## Running
 Requires installation of [Deno].
 
-## Using local copy
+### Using local copy
 Clone the repository, then run the following commands, substituting
 appropriate values for the allow-read and allow-write parameters and passing
 the path to your config file:
 
 `deno run --allow-net --allow-read=/var/gemini --allow-write=/var/gemini/logs denoscuri.ts /var/gemini/config.json`
 
-## Using an auto-fetched copy
+### Using an auto-fetched copy
 TODO
 
-# Trivia
+## Trivia
 "Denoscuri" is a portmanteau of Deno and Dioscuri - the Greek name for the
 twins Castor and Pollux, who became the constellation Gemini
 
