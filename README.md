@@ -1,4 +1,5 @@
-# Denoscuri - A simple [Gemini] server written using [Deno] and [Typescript].
+# Denoscuri
+A simple [Gemini] server written using [Deno] and [Typescript].
 
 ## Features:
 * Virtual host support
