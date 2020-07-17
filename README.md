@@ -59,7 +59,9 @@ the path to your config file:
 `deno run --allow-net --allow-read=/var/gemini --allow-write=/var/gemini/logs denoscuri.ts /var/gemini/config.json`
 
 ### Using an auto-fetched copy
-TODO
+To fetch the latest version from master and run it:
+
+`deno run --allow-net --allow-read=/var/gemini --allow-write=/var/gemini/logs https://raw.githubusercontent.com/caranatar/denoscuri/master/denoscuri.ts /var/gemini/config.json`
 
 ## Trivia
 "Denoscuri" is a portmanteau of Deno and Dioscuri - the Greek name for the
