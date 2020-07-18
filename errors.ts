@@ -39,6 +39,22 @@ export class ProxyRefusedError extends DError {
   }
 }
 
+/// Resource is Gone
+export class GoneError extends DError {
+  constructor(path: string) {
+    super(`${path} is Gone. Doneso. Caput.`,
+      StatusCode.GONE);
+  }
+}
+
+/// Temporary or permanent redirect
+export class RedirectError extends DError {
+  constructor(path: string, permanent: boolean) {
+    super(`${path}`,
+      permanent ? StatusCode.REDIRECT_PERMANENT : StatusCode.REDIRECT_TEMPORARY);
+  }
+}
+
 /// Catch-all internal error. Bad news.
 export class InternalError extends DError {
   public error: Error;

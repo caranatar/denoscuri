@@ -1,7 +1,7 @@
 import { ServerConfig } from "./config.ts";
 import { GeminiRequest } from "./request.ts";
 import { ResponseBuilder } from "./response.ts";
-import { LineEndingError, ProxyRefusedError } from "./errors.ts";
+import { LineEndingError, ProxyRefusedError, GoneError, RedirectError } from "./errors.ts";
 import { Logger, getLogger } from "https://deno.land/std/log/mod.ts";
 import { StatusCode } from "./status.ts";
 
@@ -64,6 +64,8 @@ export class Server {
 
     // Parse the request then build a response, including if an error occurred
     const res = await this.parse_request(msg)
+      .then(async (req) => this.goner_check(req))
+      .then(async (req) => this.redirect_check(req))
       .then(async (req) => ResponseBuilder.buildFromPath(this.config.documentRoot, req.path))
       .catch(async (e) => {
         if (e.code === StatusCode.PERMANENT_FAILURE) {
@@ -102,6 +104,30 @@ export class Server {
     }
 
     // Return the request
+    return req;
+  }
+
+  /// Checks if the incoming request is for a resource marked Gone
+  async goner_check(req: GeminiRequest): Promise<GeminiRequest> {
+    if (this.config.goners.length === 0) return req;
+
+    const goner = this.config.goners.filter((g) => req.path.startsWith(g));
+
+    if (goner.length !== 0) {
+      throw new GoneError(req.path);
+    } else {
+      return req;
+    }
+  }
+
+  async redirect_check(req: GeminiRequest): Promise<GeminiRequest> {
+    for (const k in this.config.redirects) {
+      if (req.path.startsWith(k)) {
+        const r = this.config.redirects[k];
+        const path = req.path.replace(k, r.destination);
+        throw new RedirectError(path, r.permanent);
+      }
+    }
     return req;
   }
 }

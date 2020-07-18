@@ -1,3 +1,5 @@
+import { canonicalize } from "./utils.ts";
+
 /// Interface for a server config block
 interface IServerConfig {
   /// The hostname for this virtual host
@@ -14,6 +16,17 @@ interface IServerConfig {
   requireCRLF?: boolean;
   /// Log file location (default: ./<hostname>.log)
   logFile?: string;
+  /// Redirects
+  redirects?: {
+    /// If true, this is a permanent redirect (default: false)
+    permanent?: boolean;
+    /// The source directory or file. Does not support wildcards
+    source: string;
+    /// The destination to redirect to
+    destination: string;
+  }[];
+  /// List of resources to mark as Gone
+  goners?: [string];
 }
 
 /**
@@ -31,6 +44,12 @@ interface IConfig {
     documentRoot: string;
     requireCRLF?: boolean;
     logFile?: string;
+    redirects?: {
+      permanent?: boolean;
+      source: string;
+      destination: string;
+    }[];
+    goners?: [string];
   }[];
 }
 
@@ -43,6 +62,8 @@ export class ServerConfig {
   public documentRoot: string;
   public requireCRLF: boolean;
   public logFile: string;
+  public redirects: Record<string, { permanent: boolean, destination: string }>;
+  public goners: string[];
 
   constructor(c: IServerConfig) {
     this.hostname = c.hostname;
@@ -52,6 +73,14 @@ export class ServerConfig {
     this.documentRoot = c.documentRoot;
     this.requireCRLF = c.requireCRLF === false ? false : true;
     this.logFile = c.logFile || `./${this.hostname}.log`;
+    this.redirects = {};
+    c.redirects?.forEach((r) => {
+      const permanent = r.permanent || false;
+      const destination = canonicalize(r.destination);
+      const source = canonicalize(r.source);
+      this.redirects[source] = { permanent, destination };
+    });
+    this.goners = c.goners ? c.goners.map((g) => canonicalize(g)) : [];
   }
 }
 
